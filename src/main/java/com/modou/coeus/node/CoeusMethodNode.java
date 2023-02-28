@@ -2,8 +2,9 @@ package com.modou.coeus.node;
 
 import com.modou.coeus.common.Constant;
 import com.modou.coeus.handler.innerNode.InsnNodeHandler;
+import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
-import jdk.internal.org.objectweb.asm.tree.MethodInsnNode;
+import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.List;
  * @create: 2021-03-08 10:02
  **/
 public class CoeusMethodNode {
+
+    private String ownerClass;
 
     // 全路径名
     private String allPath;
@@ -39,7 +42,11 @@ public class CoeusMethodNode {
     // 抛出的异常信息 记录全路径名
     private List<String> throwExceptions;
     
-    private List<String> invokeInfos;
+    public List<String> invokeInfos = new ArrayList<>();
+
+    public List<CoeusParamNode> coeusParamNodes = new ArrayList<>();
+
+    private List<CoeusAnnotationNode> annotationNodes;
 
     public CoeusMethodNode(){
 
@@ -83,4 +90,58 @@ public class CoeusMethodNode {
         return name + Constant.SPLIT + desc;
     }
 
+
+    /**
+    * @Description: 初始化方法上的注解信息
+    * @Param: [list, annotationNodeHandler]
+    * @return: void
+    * @Author: hu_pf
+    * @Date: 2023/2/27
+    */
+    public void initAnnotationInfo(List<AnnotationNode> list, AnnotationNodeHandler annotationNodeHandler){
+        if (list != null){
+            if (annotationNodes == null){
+                annotationNodes = new ArrayList<>();
+            }
+            for (AnnotationNode visibleAnnotation : list) {
+                annotationNodes.add(annotationNodeHandler.initialization(visibleAnnotation));
+            }
+        }
+    }
+
+    /**
+    * @Description: 判断方法上是否包含某个注解
+    * @Param: [name]
+    * @return: boolean
+    * @Author: hu_pf
+    * @Date: 2023/2/27
+    */
+    public boolean containAnnotationName(String name){
+        if (annotationNodes == null || annotationNodes.isEmpty()){
+            return Boolean.FALSE;
+        }
+        for (CoeusAnnotationNode annotationNode : annotationNodes) {
+            if (annotationNode.getName().contains(name)){
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    public CoeusAnnotationNode getCoeusAnnotationNodeByName(String name){
+        for (CoeusAnnotationNode annotationNode : annotationNodes) {
+            if (annotationNode.getName().contains(name)){
+                return annotationNode;
+            }
+        }
+        return null;
+    }
+
+    public void setOwnerClass(String ownerClass) {
+        this.ownerClass = ownerClass;
+    }
+
+    public String getOwnerClass() {
+        return ownerClass;
+    }
 }

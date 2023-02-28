@@ -1,14 +1,14 @@
 package com.modou.coeus.handler;
 
-import com.modou.coeus.common.ClassRouter;
+import com.modou.coeus.common.NodeHandlerFactory;
+import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
+import com.modou.coeus.handler.outerNode.OuterNodeHandler;
 import com.modou.coeus.node.CoeusClassNode;
 import com.modou.coeus.node.CoeusMethodNode;
-import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
-import jdk.internal.org.objectweb.asm.tree.MethodNode;
+import com.modou.coeus.node.CoeusParamNode;
+import jdk.internal.org.objectweb.asm.tree.*;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * @program: coeus
@@ -17,10 +17,7 @@ import java.util.ListIterator;
  * @create: 2021-03-08 20:38
  **/
 public class InitClassNodeOperate implements ClassNodeOperate{
-
-    private static String INIT_METHOD_NAME = "<clinit>";
-
-    private static final ClassRouter classRouter = ClassRouter.getInstance();
+    private static final NodeHandlerFactory nodeHandlerFactory = NodeHandlerFactory.getInstance();
 
     public void operate(CoeusClassNode classNode) {
 
@@ -29,19 +26,23 @@ public class InitClassNodeOperate implements ClassNodeOperate{
         List<MethodNode> methods = cn.methods;
 
         classNode.setSuperName(cn.superName);
+        classNode.setInterfaceNames(cn.interfaces);
+
+        classNode.initAnnotationInfo(cn.visibleAnnotations, (AnnotationNodeHandler) nodeHandlerFactory.getOuterNodeHandler(AnnotationNode.class));
+
+        for (FieldNode field : cn.fields) {
+            OuterNodeHandler outerNodeHandler = nodeHandlerFactory.getOuterNodeHandler(FieldNode.class);
+            CoeusParamNode coeusParamNode = (CoeusParamNode) outerNodeHandler.initialization(field);
+            classNode.addParamNode(coeusParamNode);
+        }
 
         for (MethodNode methodNode : methods){
-            if (INIT_METHOD_NAME.equals(methodNode.name)){
+            OuterNodeHandler outerNodeHandler = nodeHandlerFactory.getOuterNodeHandler(MethodNode.class);
+            CoeusMethodNode coeusMethodNode = (CoeusMethodNode) outerNodeHandler.initialization(methodNode);
+            if (coeusMethodNode == null){
                 continue;
             }
-            CoeusMethodNode coeusMethodNode = new CoeusMethodNode(methodNode.name,methodNode.desc);
-
-            ListIterator<AbstractInsnNode> iterator = methodNode.instructions.iterator();
-
-            while (iterator.hasNext()) {
-                AbstractInsnNode next = iterator.next();
-                coeusMethodNode.visit(classRouter.getInsnNodeHandler(next.getClass()),next);
-            }
+            coeusMethodNode.setOwnerClass(classNode.getName());
             classNode.addMethod(coeusMethodNode);
         }
     }

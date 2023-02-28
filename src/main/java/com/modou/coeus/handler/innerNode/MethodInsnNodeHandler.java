@@ -12,10 +12,11 @@ import jdk.internal.org.objectweb.asm.tree.MethodInsnNode;
  **/
 public class MethodInsnNodeHandler extends AbstractInsnNodeHandler<MethodInsnNode> {
 
-
     @Override
     public void doInvoke(MethodInsnNode methodInsnNode, CoeusMethodNode coeusMethodNode) {
+
         coeusMethodNode.addInvokeMethodInfo(methodInsnNode.owner,methodInsnNode.name,methodInsnNode.desc);
+
     }
 
     @Override

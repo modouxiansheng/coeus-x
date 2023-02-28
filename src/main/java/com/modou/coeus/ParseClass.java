@@ -7,10 +7,7 @@ import com.modou.coeus.handler.innerNode.MethodInsnNodeHandler;
 import com.modou.coeus.node.CoeusClassNode;
 import com.modou.coeus.node.CoeusMethodNode;
 import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
-import jdk.internal.org.objectweb.asm.tree.MethodInsnNode;
-import jdk.internal.org.objectweb.asm.tree.MethodNode;
+import jdk.internal.org.objectweb.asm.tree.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +41,5 @@ public class ParseClass {
         classRouter.putClass(className,cn);
 
         classRouter.getClass(className).visit(new InitClassNodeOperate());
-
     }
 }

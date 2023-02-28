@@ -11,6 +11,10 @@ public class B {
     public void invoke(){
         C c = new C();
 
+        if (c.testGetMethod.equals("xcdss")){
+
+        }
+
         c.invoke();
 
         C2 c2 = new C2();

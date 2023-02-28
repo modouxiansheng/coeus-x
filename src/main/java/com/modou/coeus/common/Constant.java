@@ -12,4 +12,6 @@ public class Constant {
     public static final String SPLIT = "#";
 
 
+    public static String INIT_METHOD_NAME = "<clinit>";
+
 }

@@ -3,10 +3,15 @@ package com.modou.coeus.common;
 import com.modou.coeus.handler.innerNode.DefaultMethodInsnNodeHandler;
 import com.modou.coeus.handler.innerNode.InsnNodeHandler;
 import com.modou.coeus.handler.innerNode.MethodInsnNodeHandler;
+import com.modou.coeus.handler.innerNode.ParamInsnNodeHandler;
+import com.modou.coeus.handler.outerNode.MethodNodeHandler;
+import com.modou.coeus.handler.outerNode.OuterNodeHandler;
 import com.modou.coeus.node.CoeusClassNode;
 import jdk.internal.org.objectweb.asm.tree.ClassNode;
+import jdk.internal.org.objectweb.asm.tree.FieldInsnNode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +26,9 @@ public class ClassRouter {
 
     // 处理类的路由
     private static Map<Class, InsnNodeHandler> insnNodeHandlerMap = new HashMap<>();
+
+    // 处理外部类的路由
+    private static Map<Class, OuterNodeHandler> outerNodeHandlerMap = new HashMap<>();
 
     private static ClassRouter classRouter= new ClassRouter();
 
@@ -43,6 +51,13 @@ public class ClassRouter {
         // todo 内部类型处理器要改成动态加载实现类而不是手动加
         MethodInsnNodeHandler methodInsnNodeHandler = new MethodInsnNodeHandler();
         insnNodeHandlerMap.put(methodInsnNodeHandler.getClassType(),methodInsnNodeHandler);
+
+        ParamInsnNodeHandler paramInsnNodeHandler = new ParamInsnNodeHandler();
+        insnNodeHandlerMap.put(paramInsnNodeHandler.getClassType(),paramInsnNodeHandler);
+
+
+        MethodNodeHandler methodNodeHandler = new MethodNodeHandler();
+        outerNodeHandlerMap.put(methodNodeHandler.getClassType(),methodNodeHandler);
     }
 
     private ClassRouter(){
@@ -53,19 +68,29 @@ public class ClassRouter {
         return classRouter;
     }
 
-    /**
-    * @Description: 获得内部处理节点器
-    * @Param: [classType]
-    * @return: com.modou.coeus.handler.innerNode.InsnNodeHandler
-    * @Author: hu_pf
-    * @Date: 2021/8/13
-    */
-    public InsnNodeHandler getInsnNodeHandler(Class classType){
-        InsnNodeHandler insnNodeHandler = insnNodeHandlerMap.get(classType);
-        if (insnNodeHandler == null){
-            insnNodeHandler = new DefaultMethodInsnNodeHandler();
+    public void initSubClass(){
+        for (CoeusClassNode classNode : this.classRouteMap.values()){
+            if (classNode.hasSuperClass()){
+                CoeusClassNode superClass = classRouter.getClass(classNode.getInterfaceAndExtendsNames());
+                if (superClass != null){
+                    superClass.addSubClass(classNode);
+                }
+            }
+
+            if (classNode.hasInterfaces()){
+                List<String> interfaceNames = classNode.getInterfaceNames();
+                for (String interfaceName : interfaceNames){
+                    CoeusClassNode superClass = classRouter.getClass(interfaceName);
+                    if (superClass != null){
+                        superClass.addSubClass(classNode);
+                    }
+                }
+            }
         }
-        return insnNodeHandler;
+        for (CoeusClassNode classNode : this.classRouteMap.values()){
+            classNode.initMethodInvokeInfo(classRouter);
+        }
+
     }
 
 }
