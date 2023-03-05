@@ -17,7 +17,11 @@ import java.util.Set;
  **/
 public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterface{
 
-    private Set<AnnotationForValueData> valueDataStatic = new HashSet<>();
+    private final Set<AnnotationForValueData> valueDataStatic = new HashSet<>();
+
+    private static final String VALUE_ANNOTATION = "Value";
+
+    private static final String CONFIGURATION_ANNOTATION = "ConfigurationProperties";
 
     @Override
     public void invoke(CoeusMethodNode invoke, ClassRouter classRouter) {
@@ -33,8 +37,8 @@ public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterfa
             if (aClass1 != null && aClass1.hasParamTer(coeusParamNode.name)){
                 // 参数上有@Value
                 CoeusParamNode coeusParamNode1 = aClass1.getCoeusParamNode(coeusParamNode.name);
-                if (coeusParamNode1.containAnnotationName("Value")){
-                    valueData.add(new AnnotationForValueData(coeusParamNode1.name,coeusParamNode1.getCoeusAnnotationNodeByName("Value").getStringValue("value")));
+                if (coeusParamNode1.containAnnotationName(VALUE_ANNOTATION)){
+                    valueData.add(new AnnotationForValueData(coeusParamNode1.name,coeusParamNode1.getCoeusAnnotationNodeByName(VALUE_ANNOTATION).getStringValue("value")));
                 }
 
                 // 方法上有@Value
@@ -43,8 +47,8 @@ public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterfa
                         if (method.getName().startsWith("set")){
                             if (method.coeusParamNodes != null){
                                 for (CoeusParamNode paramNode : method.coeusParamNodes) {
-                                    if (paramNode.name.equals(coeusParamNode.name) && method.containAnnotationName("Value")){
-                                        valueData.add(new AnnotationForValueData(coeusParamNode1.name,method.getCoeusAnnotationNodeByName("Value").getStringValue("value")));
+                                    if (paramNode.name.equals(coeusParamNode.name) && method.containAnnotationName(VALUE_ANNOTATION)){
+                                        valueData.add(new AnnotationForValueData(coeusParamNode1.name,method.getCoeusAnnotationNodeByName(VALUE_ANNOTATION).getStringValue("value")));
                                     }
                                 }
                             }
@@ -53,8 +57,8 @@ public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterfa
                 }
 
                 // 类上面有@ConfigurationProperties
-                if (aClass1.containAnnotationName("ConfigurationProperties")){
-                    valueData.add(new AnnotationForValueData(coeusParamNode1.name,aClass1.getCoeusAnnotationNodeByName("ConfigurationProperties").getStringValue("prefix")));
+                if (aClass1.containAnnotationName(CONFIGURATION_ANNOTATION)){
+                    valueData.add(new AnnotationForValueData(coeusParamNode1.name,aClass1.getCoeusAnnotationNodeByName(CONFIGURATION_ANNOTATION).getStringValue("prefix")));
                 }
 
                 // 是GrayArkUtils 这个类的
