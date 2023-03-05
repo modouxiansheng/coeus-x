@@ -14,6 +14,7 @@ import java.util.Set;
  * @description: 对于@Value 注解的处理
  * @author: hu_pf
  * @create: 2023-03-05 17:59
+ * doc: https://www.processon.com/diagraming/5fe9dddfe0b34d2934f07545
  **/
 public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterface{
 
