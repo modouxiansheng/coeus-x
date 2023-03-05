@@ -30,6 +30,13 @@ public class ScanCallChainAbility extends Ability {
         parseInvoke(invoke);
     }
 
+    /**
+    * @Description: 遍历所有入口处执行下去的方法
+    * @Param: [invoke]
+    * @return: void
+    * @Author: hu_pf
+    * @Date: 2023/3/5
+    */
     private void parseInvoke(CoeusMethodNode invoke){
         if (invoke == null || invoke.invokeInfos == null){
             return;
@@ -52,6 +59,7 @@ public class ScanCallChainAbility extends Ability {
                 }
                 CoeusMethodNode next = aClass.getMethod(methodName,desc);
                 if (next != null){
+                    // 执行真正的业务逻辑,可扩展
                     scanCallHandlerInterface.invoke(next,classRouter);
                     if (!coeusMethodNodeSet.contains(next.getOwnerClass()+next.getId())){
                         stack.add(curr);
