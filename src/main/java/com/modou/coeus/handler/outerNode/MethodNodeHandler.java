@@ -4,9 +4,13 @@ import com.modou.coeus.common.ClassRouter;
 import com.modou.coeus.common.Constant;
 import com.modou.coeus.common.NodeHandlerFactory;
 import com.modou.coeus.node.CoeusMethodNode;
+import com.modou.coeus.node.CoeusParamNode;
 import jdk.internal.org.objectweb.asm.Opcodes;
 import jdk.internal.org.objectweb.asm.tree.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -38,7 +42,6 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
 
         while (iterator.hasNext()) {
             AbstractInsnNode next = iterator.next();
-            validParam(methodNode,next);
             coeusMethodNode.visit(nodeHandlerFactory.getInsnNodeHandler(next.getClass()),next);
         }
         coeusMethodNode.initAnnotationInfo(methodNode.visibleAnnotations, (AnnotationNodeHandler) nodeHandlerFactory.getOuterNodeHandler(AnnotationNode.class));
@@ -46,30 +49,33 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
         return coeusMethodNode;
     }
 
-    private void validParam(MethodNode methodNode,AbstractInsnNode instruction){
-        if (methodNode.name.equals("buildName")) {
-            boolean isAssign = false;
-            if (instruction instanceof JumpInsnNode) {
-                // 处理if语句
-                JumpInsnNode jumpInsnNode = (JumpInsnNode) instruction;
-                int targetIndex = methodNode.instructions.indexOf(jumpInsnNode.label);
-                AbstractInsnNode target = methodNode.instructions.get(targetIndex + 1);
-                if (target instanceof VarInsnNode && target.getOpcode() == Opcodes.ASTORE
-                        && ((VarInsnNode) target).var == 0) {
-                    // 如果是将参数存储到局部变量0中，则认为是对name进行赋值的指令
-                    isAssign = true;
-                }
-            } else if (instruction instanceof VarInsnNode && instruction.getOpcode() == Opcodes.ASTORE
-                    && ((VarInsnNode) instruction).var == 0) {
-                // 如果是将参数存储到局部变量0中，则认为是对name进行赋值的指令
-                isAssign = true;
-            }
-            if (isAssign) {
-                System.out.println("name 被赋值了");
-            } else {
-//                System.out.println("name 没有被赋值");
+    public static List<String> getMethodsAssigningParameter(ClassNode cn, CoeusParamNode coeusParamNode) {
+        List<String> methods = new ArrayList<>();
+        for (MethodNode mn : cn.methods) {
+            if (isParameterAssigned(mn, coeusParamNode)) {
+                methods.add(mn.name);
             }
         }
+        return methods;
+    }
+    public static boolean isParameterAssigned(MethodNode mn, CoeusParamNode coeusParamNode) {
+        Iterator<AbstractInsnNode> it = mn.instructions.iterator();
+        AbstractInsnNode currentNode = null;
+
+        while (it.hasNext()) {
+            AbstractInsnNode instruction = it.next();
+            if (instruction.getOpcode() == Opcodes.ALOAD && ((VarInsnNode) instruction).var == 0) {
+                currentNode = instruction.getNext();
+            }
+            if (instruction.getOpcode() == Opcodes.PUTFIELD && currentNode != null) {
+                FieldInsnNode fieldInsnNode = (FieldInsnNode) instruction;
+                if (fieldInsnNode.name.equals(coeusParamNode.name) && fieldInsnNode.desc.equals(coeusParamNode.desc)) {
+                    return true;
+                }
+                currentNode = null;
+            }
+        }
+        return false;
     }
 
     @Override

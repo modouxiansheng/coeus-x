@@ -15,7 +15,9 @@ public class ParamInsnNodeHandler extends AbstractInsnNodeHandler<FieldInsnNode>
 
     @Override
     public void doInvoke(FieldInsnNode fieldInsnNode, CoeusMethodNode coeusMethodNode) {
-        coeusMethodNode.coeusParamNodes.add(new CoeusParamNode(fieldInsnNode.name, fieldInsnNode.owner));
+        CoeusParamNode coeusParamNode = new CoeusParamNode(fieldInsnNode.name, fieldInsnNode.desc);
+        coeusParamNode.owner = fieldInsnNode.owner;
+        coeusMethodNode.coeusParamNodes.add(coeusParamNode);
     }
 
     @Override

@@ -27,7 +27,5 @@ public class ParamTestMain {
         instance.initSubClass();
 
         CoeusClassNode aClass = instance.getClass("com.modou.coeus.parse.param.ParamTest");
-
-        System.out.println("1");
     }
 }

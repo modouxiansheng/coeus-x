@@ -18,11 +18,13 @@ public class CoeusParamNode {
 
     public String owner;
 
+    public String desc;
+
     private List<CoeusAnnotationNode> annotationNodes;
 
-    public CoeusParamNode(String name,String owner) {
+    public CoeusParamNode(String name,String desc) {
         this.name = name;
-        this.owner = owner;
+        this.desc = desc;
     }
 
     public boolean containAnnotationName(String name){
