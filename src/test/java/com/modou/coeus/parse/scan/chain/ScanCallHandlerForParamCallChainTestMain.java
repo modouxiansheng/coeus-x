@@ -18,11 +18,11 @@ public class ScanCallHandlerForParamCallChainTestMain {
 
     public static void main(String[] args) {
         String projectRoot = "/Users/admin/mygit/coeus-x/target/test-classes/com/modou/coeus/parse/scan";
-        ScanCallHandlerForParamCallChain scanCallHandlerForParamCallChain = new ScanCallHandlerForParamCallChain("com.modou.coeus.parse.scan.chain.ScanCallHandlerForParamCallChainTestC#name");
+        ScanCallHandlerForParamCallChain scanCallHandlerForParamCallChain = new ScanCallHandlerForParamCallChain();
         ScanCallChainAbility scanCallChainAbility = new ScanCallChainAbility(projectRoot,scanCallHandlerForParamCallChain);
         scanCallChainAbility.invoke("com.modou.coeus.parse.scan.chain.ScanCallHandlerForParamCallChainTest","invoke");
 
-        List<List<CoeusMethodNode>> traces = scanCallHandlerForParamCallChain.getTraces();
+        List<List<CoeusMethodNode>> traces = scanCallHandlerForParamCallChain.getTraces("com.modou.coeus.parse.scan.chain.ScanCallHandlerForParamCallChainTestC#name");
 
         System.out.println("1");
     }

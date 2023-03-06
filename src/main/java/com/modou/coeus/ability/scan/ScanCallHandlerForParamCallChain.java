@@ -16,17 +16,9 @@ import java.util.*;
  **/
 public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
 
-    private String className;
-
-    private String paramName;
 
     private Map<CoeusMethodNode, ArrayList<CoeusMethodNode>> adjList = new HashMap<>();
 
-    public ScanCallHandlerForParamCallChain(String paramInfo) {
-        String[] split = paramInfo.split(Constant.SPLIT);
-        this.className = split[0];
-        this.paramName = split[1];
-    }
 
     @Override
     public void doInvoke(ScanCallHandlerData scanCallHandlerData) {
@@ -45,8 +37,15 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
         }
     }
 
-    public List<List<CoeusMethodNode>> getTraces() {
-        return traverse();
+    /**
+    * @Description: 根据传入的参数信息获取其调用链
+    * @Param: [paramInfo]
+    * @return: java.util.List<java.util.List<com.modou.coeus.node.CoeusMethodNode>>
+    * @Author: hu_pf
+    * @Date: 2023/3/6
+    */
+    public List<List<CoeusMethodNode>> getTraces(String paramInfo) {
+        return traverse(paramInfo);
     }
 
     /**
@@ -54,7 +53,10 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
      *
      * @return 所有从起点到终点的路径，每条路径以ArrayList形式返回
      */
-    public List<List<CoeusMethodNode>> traverse() {
+    private List<List<CoeusMethodNode>> traverse(String paramInfo) {
+        String[] split = paramInfo.split(Constant.SPLIT);
+        String className = split[0];
+        String paramName = split[1];
         List<List<CoeusMethodNode>> allPaths = new ArrayList<>();
         Stack<ArrayList<CoeusMethodNode>> stack = new Stack<>();
         Map<CoeusMethodNode, Boolean> visited = new HashMap<>(); // 记录已访问的节点
@@ -69,7 +71,7 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
             }
             visited.put(curNode, true); // 标记当前节点已经访问
             curNode.coeusParamNodes.removeIf(e -> !paramName.equals(e.name));
-            if (valid(curNode, allPaths, curPath)) {
+            if (valid(curNode, allPaths, curPath,className)) {
                 continue;
             }
             ArrayList<CoeusMethodNode> neighbors = adjList.get(curNode);
@@ -87,7 +89,7 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
     }
 
 
-    private boolean valid(CoeusMethodNode curNode,List<List<CoeusMethodNode>> allPaths,ArrayList<CoeusMethodNode> curPath){
+    private boolean valid(CoeusMethodNode curNode,List<List<CoeusMethodNode>> allPaths,ArrayList<CoeusMethodNode> curPath,String className){
         for (CoeusParamNode coeusParamNode : curNode.coeusParamNodes) {
             if (ParamParseUtils.isParameterAssigned(curNode.getMetaData(),coeusParamNode) && coeusParamNode.isEqualClass(className)){
                 allPaths.add(curPath);

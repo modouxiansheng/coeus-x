@@ -71,6 +71,13 @@ public class ScanCallHandlerForValueAnnotation extends AbstractScanCallHandler{
         valueDataStatic.addAll(valueData);
     }
 
+    /**
+    * @Description: 获取手机到的配置信息
+    * @Param: []
+    * @return: java.util.Set<com.modou.coeus.ability.data.AnnotationForValueData>
+    * @Author: hu_pf
+    * @Date: 2023/3/6
+    */
     public Set<AnnotationForValueData> getValueData() {
         return valueDataStatic;
     }
