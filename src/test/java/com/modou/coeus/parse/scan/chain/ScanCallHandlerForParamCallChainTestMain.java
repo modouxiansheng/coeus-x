@@ -2,6 +2,8 @@ package com.modou.coeus.parse.scan.chain;
 
 import com.modou.coeus.ability.scan.ScanCallChainAbility;
 import com.modou.coeus.ability.scan.ScanCallHandlerForParamCallChain;
+import com.modou.coeus.common.ClassRouter;
+import com.modou.coeus.node.CoeusClassNode;
 import com.modou.coeus.node.CoeusMethodNode;
 
 import java.util.List;

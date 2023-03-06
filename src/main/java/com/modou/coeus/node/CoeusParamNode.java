@@ -78,4 +78,9 @@ public class CoeusParamNode {
         className = className.replaceAll(Constant.CLASS_SPLIT_POINT,Constant.CLASS_SPLIT_SLASH);
         return this.owner.equals(className) && this.name.equals(paraName);
     }
+
+    public boolean isEqualClass(String className){
+        className = className.replaceAll(Constant.CLASS_SPLIT_POINT,Constant.CLASS_SPLIT_SLASH);
+        return this.owner.equals(className);
+    }
 }

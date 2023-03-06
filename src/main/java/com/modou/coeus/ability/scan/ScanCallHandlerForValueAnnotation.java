@@ -16,7 +16,7 @@ import java.util.Set;
  * @create: 2023-03-05 17:59
  * doc: https://www.processon.com/diagraming/5fe9dddfe0b34d2934f07545
  **/
-public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterface{
+public class ScanCallHandlerForValueAnnotation extends AbstractScanCallHandler{
 
     private final Set<AnnotationForValueData> valueDataStatic = new HashSet<>();
 
@@ -25,7 +25,7 @@ public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterfa
     private static final String CONFIGURATION_ANNOTATION = "ConfigurationProperties";
 
     @Override
-    public void invoke(ScanCallHandlerData scanCallHandlerData) {
+    public void doInvoke(ScanCallHandlerData scanCallHandlerData) {
         CoeusMethodNode invoke = scanCallHandlerData.getCoeusMethodNodeCurrent();
         ClassRouter classRouter = scanCallHandlerData.getClassRouter();
         if (invoke == null || invoke.coeusParamNodes == null){
