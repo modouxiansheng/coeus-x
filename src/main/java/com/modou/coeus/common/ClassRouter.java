@@ -32,9 +32,6 @@ public class ClassRouter {
 
     private static ClassRouter classRouter= new ClassRouter();
 
-    private static final String CLASS_SPLIT_POINT = "\\.";
-    private static final String CLASS_SPLIT_SLASH = "/";
-
 
     public void putClass(String className, ClassNode cn){
         CoeusClassNode coeusClassNode = new CoeusClassNode(className);
@@ -43,7 +40,7 @@ public class ClassRouter {
     }
 
     public CoeusClassNode getClass(String className){
-        className = className.replaceAll(CLASS_SPLIT_POINT,CLASS_SPLIT_SLASH);
+        className = className.replaceAll(Constant.CLASS_SPLIT_POINT,Constant.CLASS_SPLIT_SLASH);
         return classRouteMap.get(className);
     }
 

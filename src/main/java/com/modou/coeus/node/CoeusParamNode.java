@@ -1,5 +1,6 @@
 package com.modou.coeus.node;
 
+import com.modou.coeus.common.Constant;
 import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
 
@@ -64,5 +65,17 @@ public class CoeusParamNode {
                 annotationNodes.add(annotationNodeHandler.initialization(visibleAnnotation));
             }
         }
+    }
+
+    /**
+    * @Description: 根据传入的类的名称和参数名称判断是否符合此参数
+    * @Param: [className, paraName]
+    * @return: boolean
+    * @Author: hu_pf
+    * @Date: 2023/3/6
+    */
+    public boolean isConformParam(String className,String paraName){
+        className = className.replaceAll(Constant.CLASS_SPLIT_POINT,Constant.CLASS_SPLIT_SLASH);
+        return this.owner.equals(className) && this.name.equals(paraName);
     }
 }

@@ -25,5 +25,7 @@ public class ChatTestForCycle {
         CoeusClassNode cyCleSub1 = instance.getClass("com.modou.coeus.parse.cycle.CyCleSub1");
         CoeusClassNode cyCleSub2 = instance.getClass("com.modou.coeus.parse.cycle.CyCleSub2");
         CoeusMethodNode invoke = aClass.getMethod("invoke");
+
+        System.out.println("1");
     }
 }

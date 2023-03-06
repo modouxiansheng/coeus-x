@@ -3,6 +3,7 @@ package com.modou.coeus.handler.outerNode;
 import com.modou.coeus.common.ClassRouter;
 import com.modou.coeus.common.Constant;
 import com.modou.coeus.common.NodeHandlerFactory;
+import com.modou.coeus.node.CoeusClassNode;
 import com.modou.coeus.node.CoeusMethodNode;
 import com.modou.coeus.node.CoeusParamNode;
 import jdk.internal.org.objectweb.asm.Opcodes;
@@ -36,7 +37,7 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
         if (Constant.INIT_METHOD_NAME.equals(methodNode.name)){
             return null;
         }
-        CoeusMethodNode coeusMethodNode = new CoeusMethodNode(methodNode.name,methodNode.desc);
+        CoeusMethodNode coeusMethodNode = new CoeusMethodNode(methodNode);
 
         ListIterator<AbstractInsnNode> iterator = methodNode.instructions.iterator();
 
@@ -47,35 +48,6 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
         coeusMethodNode.initAnnotationInfo(methodNode.visibleAnnotations, (AnnotationNodeHandler) nodeHandlerFactory.getOuterNodeHandler(AnnotationNode.class));
 
         return coeusMethodNode;
-    }
-
-    public static List<String> getMethodsAssigningParameter(ClassNode cn, CoeusParamNode coeusParamNode) {
-        List<String> methods = new ArrayList<>();
-        for (MethodNode mn : cn.methods) {
-            if (isParameterAssigned(mn, coeusParamNode)) {
-                methods.add(mn.name);
-            }
-        }
-        return methods;
-    }
-    public static boolean isParameterAssigned(MethodNode mn, CoeusParamNode coeusParamNode) {
-        Iterator<AbstractInsnNode> it = mn.instructions.iterator();
-        AbstractInsnNode currentNode = null;
-
-        while (it.hasNext()) {
-            AbstractInsnNode instruction = it.next();
-            if (instruction.getOpcode() == Opcodes.ALOAD && ((VarInsnNode) instruction).var == 0) {
-                currentNode = instruction.getNext();
-            }
-            if (instruction.getOpcode() == Opcodes.PUTFIELD && currentNode != null) {
-                FieldInsnNode fieldInsnNode = (FieldInsnNode) instruction;
-                if (fieldInsnNode.name.equals(coeusParamNode.name) && fieldInsnNode.desc.equals(coeusParamNode.desc)) {
-                    return true;
-                }
-                currentNode = null;
-            }
-        }
-        return false;
     }
 
     @Override

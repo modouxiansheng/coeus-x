@@ -5,6 +5,7 @@ import com.modou.coeus.handler.innerNode.InsnNodeHandler;
 import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
 import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
+import jdk.internal.org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class CoeusMethodNode {
     private String allPath;
 
     private String id;
+
+    private MethodNode metaData;
 
     // 别名
     private String name;
@@ -52,9 +55,10 @@ public class CoeusMethodNode {
 
     }
 
-    public CoeusMethodNode(String name,String desc){
-        this.name = name;
-        this.desc = desc;
+    public CoeusMethodNode(MethodNode methodNode){
+        this.name = methodNode.name;
+        this.desc = methodNode.desc;
+        this.metaData = methodNode;
         this.id = generateId(name,desc);
     }
     
@@ -144,4 +148,10 @@ public class CoeusMethodNode {
     public String getOwnerClass() {
         return ownerClass;
     }
+
+    public MethodNode getMetaData() {
+        return metaData;
+    }
+
+
 }

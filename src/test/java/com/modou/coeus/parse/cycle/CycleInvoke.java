@@ -8,11 +8,14 @@ package com.modou.coeus.parse.cycle;
  **/
 public class CycleInvoke {
 
+    private static String test;
+
     public static void main(String[] args) {
         invoke();
     }
 
     public static void invoke(){
+        String name = test;
         CyCleMain cyCleMain = new CyCleMain();
         cyCleMain.invoke();
     }

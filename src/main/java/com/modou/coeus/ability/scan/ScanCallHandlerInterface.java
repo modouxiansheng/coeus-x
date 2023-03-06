@@ -4,6 +4,5 @@ import com.modou.coeus.common.ClassRouter;
 import com.modou.coeus.node.CoeusMethodNode;
 
 public interface ScanCallHandlerInterface {
-
-    public void invoke(CoeusMethodNode invoke, ClassRouter classRouter);
+    public void invoke(ScanCallHandlerData scanCallHandlerData);
 }

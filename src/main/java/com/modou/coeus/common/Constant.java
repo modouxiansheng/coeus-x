@@ -14,4 +14,8 @@ public class Constant {
 
     public static String INIT_METHOD_NAME = "<clinit>";
 
+
+    public static final String CLASS_SPLIT_POINT = "\\.";
+    public static final String CLASS_SPLIT_SLASH = "/";
+
 }

@@ -25,7 +25,9 @@ public class ScanCallHandlerForValueAnnotation implements ScanCallHandlerInterfa
     private static final String CONFIGURATION_ANNOTATION = "ConfigurationProperties";
 
     @Override
-    public void invoke(CoeusMethodNode invoke, ClassRouter classRouter) {
+    public void invoke(ScanCallHandlerData scanCallHandlerData) {
+        CoeusMethodNode invoke = scanCallHandlerData.getCoeusMethodNodeCurrent();
+        ClassRouter classRouter = scanCallHandlerData.getClassRouter();
         if (invoke == null || invoke.coeusParamNodes == null){
             return;
         }
