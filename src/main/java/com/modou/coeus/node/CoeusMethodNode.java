@@ -5,6 +5,7 @@ import com.modou.coeus.handler.innerNode.InsnNodeHandler;
 import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
 import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
+import jdk.internal.org.objectweb.asm.tree.FieldInsnNode;
 import jdk.internal.org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class CoeusMethodNode {
     public List<CoeusParamNode> coeusParamNodes = new ArrayList<>();
 
     private List<CoeusAnnotationNode> annotationNodes;
+
+    public List<FieldInsnNode> fieldAssigns = new ArrayList<>();
 
     public CoeusMethodNode(){
 
