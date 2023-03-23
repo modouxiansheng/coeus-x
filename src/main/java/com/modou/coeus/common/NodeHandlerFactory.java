@@ -1,9 +1,6 @@
 package com.modou.coeus.common;
 
-import com.modou.coeus.handler.innerNode.DefaultMethodInsnNodeHandler;
-import com.modou.coeus.handler.innerNode.InsnNodeHandler;
-import com.modou.coeus.handler.innerNode.MethodInsnNodeHandler;
-import com.modou.coeus.handler.innerNode.ParamInsnNodeHandler;
+import com.modou.coeus.handler.innerNode.*;
 import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import com.modou.coeus.handler.outerNode.MethodNodeHandler;
 import com.modou.coeus.handler.outerNode.OuterNodeHandler;
@@ -36,6 +33,9 @@ public class NodeHandlerFactory {
 
         ParamInsnNodeHandler paramInsnNodeHandler = new ParamInsnNodeHandler();
         insnNodeHandlerMap.put(paramInsnNodeHandler.getClassType(),paramInsnNodeHandler);
+
+        InvokeDynamicInsnNodeHandler invokeDynamicInsnNodeHandler = new InvokeDynamicInsnNodeHandler();
+        insnNodeHandlerMap.put(invokeDynamicInsnNodeHandler.getClassType(),invokeDynamicInsnNodeHandler);
 
 
         MethodNodeHandler methodNodeHandler = new MethodNodeHandler();
