@@ -33,7 +33,7 @@ public class ScanCallHandlerForDubboInvoke extends AbstractScanCallHandler{
 
     private static Set<String> INTERFACE_NAME = new HashSet<>();
 
-
+    private Set<String> parseDubboInvoke = new HashSet<>();
 
     public ScanCallHandlerForDubboInvoke(String dubboConsumerPath) {
         initPath(dubboConsumerPath);
@@ -49,10 +49,14 @@ public class ScanCallHandlerForDubboInvoke extends AbstractScanCallHandler{
         for (String invokeString : invoke.invokeInfos){
             ClassAndMethodData classAndMethodData = ParseUtils.parseClassAndMethodString(invokeString);
             if (INTERFACE_NAME.contains(classAndMethodData.getClassName())){
-                System.out.println(classAndMethodData.getClassName().replaceAll(Constant.CLASS_SPLIT_SLASH,Constant.CLASS_SPLIT_POINT)+"#"+classAndMethodData.getMethodName());
+                parseDubboInvoke.add(classAndMethodData.getClassName().replaceAll(Constant.CLASS_SPLIT_SLASH,Constant.CLASS_SPLIT_POINT)+"#"+classAndMethodData.getMethodName());
             }
         }
 
+    }
+
+    public Set<String> getParseDubboInvoke(){
+        return this.parseDubboInvoke;
     }
 
     private static void initPath(String dubboConsumerPath){
