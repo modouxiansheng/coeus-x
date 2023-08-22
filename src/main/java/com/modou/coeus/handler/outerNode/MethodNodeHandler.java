@@ -51,7 +51,7 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
     }
 
     @Override
-    public Class getClassType() {
+    public Class<?> getClassType() {
         return MethodNode.class;
     }
 }

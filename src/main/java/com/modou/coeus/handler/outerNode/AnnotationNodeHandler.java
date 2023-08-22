@@ -25,7 +25,7 @@ public class AnnotationNodeHandler implements OuterNodeHandler<AnnotationNode,Co
     }
 
     @Override
-    public Class getClassType() {
+    public Class<?> getClassType() {
         return AnnotationNode.class;
     }
 }

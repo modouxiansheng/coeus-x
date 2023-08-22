@@ -10,5 +10,5 @@ public interface OuterNodeHandler<T,K> {
 
     K initialization(T t);
 
-    Class getClassType();
+    Class<?> getClassType();
 }

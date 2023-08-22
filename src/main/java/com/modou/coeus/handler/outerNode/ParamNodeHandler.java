@@ -29,7 +29,7 @@ public class ParamNodeHandler implements OuterNodeHandler<FieldNode, CoeusParamN
     }
 
     @Override
-    public Class getClassType() {
+    public Class<?> getClassType() {
         return FieldNode.class;
     }
 }
