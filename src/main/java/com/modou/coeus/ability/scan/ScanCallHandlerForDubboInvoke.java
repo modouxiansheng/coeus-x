@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -33,7 +34,7 @@ public class ScanCallHandlerForDubboInvoke extends AbstractScanCallHandler{
 
     private static Set<String> INTERFACE_NAME = new HashSet<>();
 
-    private Set<String> parseDubboInvoke = new HashSet<>();
+    private LinkedHashSet<String> parseDubboInvoke = new LinkedHashSet<>();
 
     public ScanCallHandlerForDubboInvoke(String dubboConsumerPath) {
         initPath(dubboConsumerPath);

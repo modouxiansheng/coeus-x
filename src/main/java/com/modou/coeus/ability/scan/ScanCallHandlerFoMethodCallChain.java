@@ -6,16 +6,15 @@ import com.modou.coeus.node.CoeusParamNode;
 import com.modou.coeus.utils.ParamParseUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @program: coeus-x
- * @description: 参数调用链
+ * @description: 方法调用链
  * @author: hu_pf
  * @create: 2023-03-05 17:59
  * doc: https://www.processon.com/diagraming/5fe9dddfe0b34d2934f07545
  **/
-public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
+public class ScanCallHandlerFoMethodCallChain extends AbstractScanCallHandler{
 
 
     private Map<CoeusMethodNode, ArrayList<CoeusMethodNode>> adjList = new HashMap<>();
@@ -39,12 +38,12 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
     }
 
     /**
-     * @Description: 根据传入的参数信息获取其调用链
-     * @Param: [paramInfo]
-     * @return: java.util.List<java.util.List<com.modou.coeus.node.CoeusMethodNode>>
-     * @Author: hu_pf
-     * @Date: 2023/3/6
-     */
+    * @Description: 根据传入的参数信息获取其调用链
+    * @Param: [paramInfo]
+    * @return: java.util.List<java.util.List<com.modou.coeus.node.CoeusMethodNode>>
+    * @Author: hu_pf
+    * @Date: 2023/3/6
+    */
     public List<List<CoeusMethodNode>> getTraces(String paramInfo) {
         return traverse(paramInfo);
     }
@@ -57,7 +56,7 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
     private List<List<CoeusMethodNode>> traverse(String paramInfo) {
         String[] split = paramInfo.split(Constant.SPLIT);
         String className = split[0];
-        String paramName = split[1];
+        String methodName = split[1];
         List<List<CoeusMethodNode>> allPaths = new ArrayList<>();
         Stack<ArrayList<CoeusMethodNode>> stack = new Stack<>();
         Map<CoeusMethodNode, Boolean> visited = new HashMap<>(); // 记录已访问的节点
@@ -70,12 +69,10 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
             if (visited.containsKey(curNode) && visited.get(curNode)) {
                 continue; // 如果已经访问过，跳过当前节点
             }
-
-            if (valid(curNode, allPaths, curPath,className,paramName)) {
+            if (valid(curNode, allPaths, curPath,className,methodName)) {
                 continue;
             }
             visited.put(curNode, true); // 标记当前节点已经访问
-
             ArrayList<CoeusMethodNode> neighbors = adjList.get(curNode);
             if (neighbors != null) {
                 for (CoeusMethodNode neighbor : neighbors) {
@@ -87,17 +84,14 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
                 }
             }
         }
-        return allPaths.stream().distinct().collect(Collectors.toList());
+        return allPaths;
     }
 
 
-    private boolean valid(CoeusMethodNode curNode,List<List<CoeusMethodNode>> allPaths,ArrayList<CoeusMethodNode> curPath,String className,String paramName){
-        if (curNode == null){
-            return Boolean.FALSE;
-        }
-        for (CoeusParamNode coeusParamNode : curNode.coeusParamNodes) {
-            if (ParamParseUtils.isParameterAssigned(curNode.getMetaData(),coeusParamNode)
-                    && coeusParamNode.isConformParam(className,paramName)){
+    private boolean valid(CoeusMethodNode curNode,List<List<CoeusMethodNode>> allPaths,ArrayList<CoeusMethodNode> curPath,String className,String methodName){
+        for (String invokeString : curNode.invokeInfos){
+            String[] split = invokeString.split(Constant.SPLIT);
+            if (split[0].replaceAll(Constant.CLASS_SPLIT_SLASH,Constant.CLASS_SPLIT_POINT).replaceAll("\\$",Constant.CLASS_SPLIT_POINT).equals(className) && split[1].equals(methodName)){
                 allPaths.add(curPath);
                 return Boolean.TRUE;
             }
