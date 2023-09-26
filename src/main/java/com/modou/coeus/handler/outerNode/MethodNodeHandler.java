@@ -1,17 +1,11 @@
 package com.modou.coeus.handler.outerNode;
 
-import com.modou.coeus.common.ClassRouter;
 import com.modou.coeus.common.Constant;
 import com.modou.coeus.common.NodeHandlerFactory;
-import com.modou.coeus.node.CoeusClassNode;
 import com.modou.coeus.node.CoeusMethodNode;
-import com.modou.coeus.node.CoeusParamNode;
-import jdk.internal.org.objectweb.asm.Opcodes;
+import com.modou.coeus.utils.MethodLineCounter;
 import jdk.internal.org.objectweb.asm.tree.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 
 /**
@@ -46,6 +40,8 @@ public class MethodNodeHandler implements OuterNodeHandler<MethodNode,CoeusMetho
             coeusMethodNode.visit(nodeHandlerFactory.getInsnNodeHandler(next.getClass()),next);
         }
         coeusMethodNode.initAnnotationInfo(methodNode.visibleAnnotations, (AnnotationNodeHandler) nodeHandlerFactory.getOuterNodeHandler(AnnotationNode.class));
+
+        coeusMethodNode.setLine(MethodLineCounter.countLines(methodNode));
 
         return coeusMethodNode;
     }

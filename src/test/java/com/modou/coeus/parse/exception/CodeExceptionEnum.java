@@ -19,4 +19,16 @@ public enum CodeExceptionEnum {
         this.msg = msg;
         this.toast = toast;
     }
+
+    public long getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public String getToast() {
+        return toast;
+    }
 }

@@ -12,13 +12,20 @@ public class A {
         B b = new B();
         b.run();
         ErrorInfo errorInfo = new ErrorInfo();
+        errorInfo.setMsg("xxx");
         test(errorInfo);
+
         throw new CodeException(CodeExceptionEnum.OPERATE_FAILED);
     }
 
     public void test(ErrorInfo errorInfo){
+        test2();
+        throw new CodeException(1,errorInfo.getMsg(),CodeExceptionEnum.OPERATE_FAILED);
+    }
 
-        throw new CodeException(CodeExceptionEnum.OPERATE_FAILED,errorInfo.getMsg());
+    public void test2(){
+
+        throw new CodeException(2,"测试",CodeExceptionEnum.OPERATE_FAILED);
     }
 
 
@@ -27,6 +34,10 @@ public class A {
 
         public String getMsg(){
             return this.msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
         }
     }
 }

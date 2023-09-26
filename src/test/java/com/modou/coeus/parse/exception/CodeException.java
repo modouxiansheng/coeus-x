@@ -11,12 +11,22 @@ public class CodeException extends RuntimeException{
 
     private CodeExceptionEnum exceptionCode;
 
+    private String msg;
+
     public CodeException(CodeExceptionEnum exceptionCode) {
         this.exceptionCode = exceptionCode;
     }
 
 
-    public CodeException(CodeExceptionEnum exceptionCode, String message) {
-        this.exceptionCode = exceptionCode;
+    public CodeException(CodeExceptionEnum exceptionCode1, String message1) {
+        String test = "ceshi";
+        this.exceptionCode = exceptionCode1;
+        this.msg = message1 + test;
+    }
+
+    public CodeException(Integer age , String message1,CodeExceptionEnum exceptionCode1) {
+        String test = "ceshi";
+        this.exceptionCode = exceptionCode1;
+        this.msg = exceptionCode1.getMsg();
     }
 }

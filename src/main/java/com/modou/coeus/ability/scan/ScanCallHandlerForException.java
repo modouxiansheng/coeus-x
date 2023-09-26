@@ -34,7 +34,8 @@ public class ScanCallHandlerForException extends AbstractScanCallHandler{
 
         InsnList instructions = methodNode.instructions;
         boolean isCodeException = false;
-        for (AbstractInsnNode insnNode : instructions.toArray()) {
+        AbstractInsnNode[] abstractInsnNodes = instructions.toArray();
+        for (AbstractInsnNode insnNode : abstractInsnNodes) {
             if (insnNode.getOpcode() == Opcodes.ATHROW) {
                 // 在抛出异常之前，获取 CodeException 的入参值
                 codeExceptionArgs.add(getCodeExceptionArg(insnNode, methodNode,coeusMethodNode));

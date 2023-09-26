@@ -54,6 +54,8 @@ public class CoeusMethodNode {
 
     public List<FieldInsnNode> fieldAssigns = new ArrayList<>();
 
+    private Line line;
+
     public CoeusMethodNode(){
 
     }
@@ -156,5 +158,11 @@ public class CoeusMethodNode {
         return metaData;
     }
 
+    public void setLine(Line line) {
+        this.line = line;
+    }
 
+    public boolean isMethodLine(Line line){
+        return this.line.isContainLine(line);
+    }
 }
