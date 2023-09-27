@@ -8,6 +8,9 @@ import com.modou.coeus.utils.ParamParseUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.modou.coeus.common.Constant.CLASS_SPLIT_POINT;
+import static com.modou.coeus.common.Constant.CLASS_SPLIT_SLASH;
+
 /**
  * @program: coeus-x
  * @description: 参数调用链
@@ -19,6 +22,8 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
 
 
     private Map<CoeusMethodNode, ArrayList<CoeusMethodNode>> adjList = new HashMap<>();
+
+    private List<String> excludeClassAndMethod = new ArrayList<>();
 
 
     @Override
@@ -46,7 +51,33 @@ public class ScanCallHandlerForParamCallChain extends AbstractScanCallHandler{
      * @Date: 2023/3/6
      */
     public List<List<CoeusMethodNode>> getTraces(String paramInfo) {
-        return traverse(paramInfo);
+        List<List<CoeusMethodNode>> traverse = traverse(paramInfo);
+
+        Iterator<List<CoeusMethodNode>> iterator = traverse.iterator();
+        while (iterator.hasNext()){
+            List<CoeusMethodNode> next = iterator.next();
+            for (String exclude : excludeClassAndMethod){
+                if (containExclude(next,exclude)){
+                    iterator.remove();
+                }
+            }
+        }
+
+        return traverse;
+    }
+
+    private boolean containExclude(List<CoeusMethodNode> next,String excludeName){
+
+        List<String> collect = next.stream().map(e -> {
+            String ownerClass = e.getOwnerClass();
+            String name = e.getName();
+            return ownerClass.replaceAll(CLASS_SPLIT_SLASH, CLASS_SPLIT_POINT) + "#" + name;
+        }).collect(Collectors.toList());
+        return collect.contains(excludeName);
+    }
+
+    public void addExcludeClassAndMethod(String classAndMethod){
+        excludeClassAndMethod.add(classAndMethod);
     }
 
     /**
