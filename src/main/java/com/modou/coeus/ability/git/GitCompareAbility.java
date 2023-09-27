@@ -35,8 +35,6 @@ public class GitCompareAbility {
 
     private String url;
 
-    private static final String WORK_TEMP_DIC = "";
-
     private PassWord passWord;
 
     private String workingDirectory;
@@ -77,7 +75,7 @@ public class GitCompareAbility {
             ObjectId branchObjId = repository.resolve(currentBranch);
 
             //获取master分支的objectID
-            ObjectId masterBranchObjId = repository.resolve("master");
+            ObjectId masterBranchObjId = repository.resolve(oldBranchName);
 
             //当前分支
             RevWalk revWalk = new RevWalk(repository);
@@ -89,19 +87,21 @@ public class GitCompareAbility {
             //from the commit we can build the tree which allows us to construct the TreeParser
             //当前分支信息
             RevTree revTree = revCommit.getTree();
-            ObjectReader objReader = repository.newObjectReader();
-            CanonicalTreeParser currentBranchTreeParser = new CanonicalTreeParser();
-            currentBranchTreeParser.reset(objReader,revTree.getId());
+            try(ObjectReader objReader = repository.newObjectReader();) {
+                CanonicalTreeParser currentBranchTreeParser = new CanonicalTreeParser();
+                currentBranchTreeParser.reset(objReader,revTree.getId());
 
-            //master分支信息
-            RevTree revTreeMaster = revCommitMaster.getTree();
-            CanonicalTreeParser masterBranchTreeParser = new CanonicalTreeParser();
-            masterBranchTreeParser.reset(objReader,revTreeMaster.getId());
-            revWalk.dispose();
+                //master分支信息
+                RevTree revTreeMaster = revCommitMaster.getTree();
+                CanonicalTreeParser masterBranchTreeParser = new CanonicalTreeParser();
+                masterBranchTreeParser.reset(objReader,revTreeMaster.getId());
+                revWalk.dispose();
 
-            List<DiffEntry> diffEntryList = git.diff().setOldTree(masterBranchTreeParser).setNewTree(currentBranchTreeParser).setShowNameAndStatusOnly(true).call();
+                List<DiffEntry> diffEntryList = git.diff().setOldTree(masterBranchTreeParser).setNewTree(currentBranchTreeParser).setShowNameAndStatusOnly(true).call();
 
-            gitCompareHandler.doInvoke(initGitCompareContext(diffEntryList,repository));
+                gitCompareHandler.doInvoke(initGitCompareContext(diffEntryList,repository));
+            }
+
 
         }catch (Exception e){
             e.printStackTrace();
