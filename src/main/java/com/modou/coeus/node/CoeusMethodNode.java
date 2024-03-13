@@ -165,4 +165,20 @@ public class CoeusMethodNode {
     public boolean isMethodLine(Line line){
         return this.line.isContainLine(line);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CoeusMethodNode handle = (CoeusMethodNode) o;
+
+
+        if (name != null ? !name.equals(handle.name) : handle.name != null) return false;
+        return desc != null ? desc.equals(handle.desc) : handle.desc == null;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
 }

@@ -27,6 +27,10 @@ public class CodeException extends RuntimeException{
     public CodeException(Integer age , String message1,CodeExceptionEnum exceptionCode1) {
         String test = "ceshi";
         this.exceptionCode = exceptionCode1;
-        this.msg = exceptionCode1.getMsg();
+        this.msg = message1 + age;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

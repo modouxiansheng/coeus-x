@@ -25,6 +25,7 @@ public class ParamNodeHandler implements OuterNodeHandler<FieldNode, CoeusParamN
     public CoeusParamNode initialization(FieldNode fieldNode) {
         CoeusParamNode coeusParamNode = new CoeusParamNode(fieldNode.name, fieldNode.desc);
         coeusParamNode.initAnnotationInfo(fieldNode.visibleAnnotations, (AnnotationNodeHandler) nodeHandlerFactory.getOuterNodeHandler(AnnotationNode.class));
+        coeusParamNode.access = fieldNode.access;
         return coeusParamNode;
     }
 

@@ -10,6 +10,7 @@ import com.modou.coeus.node.CoeusClassNode;
 import jdk.internal.org.objectweb.asm.tree.ClassNode;
 import jdk.internal.org.objectweb.asm.tree.FieldInsnNode;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,9 @@ public class ClassRouter {
     private static ClassRouter classRouter= new ClassRouter();
 
 
-    public void putClass(String className, ClassNode cn){
+    public void putClass(String className, ClassNode cn, InputStream inputStream){
         CoeusClassNode coeusClassNode = new CoeusClassNode(className);
-        coeusClassNode.initMetadata(cn);
+        coeusClassNode.initMetadata(cn,inputStream);
         classRouteMap.put(className,coeusClassNode);
     }
 

@@ -6,6 +6,7 @@ import com.modou.coeus.handler.outerNode.AnnotationNodeHandler;
 import jdk.internal.org.objectweb.asm.tree.AnnotationNode;
 import jdk.internal.org.objectweb.asm.tree.ClassNode;
 
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -59,6 +60,7 @@ public class CoeusClassNode {
 
     private List<CoeusClassNode> subClass = new ArrayList<>();
 
+    private InputStream inputStream;
 
     public CoeusClassNode(String name){
         this.name = name;
@@ -87,8 +89,10 @@ public class CoeusClassNode {
         methods.add(coeusMethodNode);
     }
 
-    public void initMetadata(ClassNode classNode){
+    public void initMetadata(ClassNode classNode, InputStream inputStream){
         this.metaData = classNode;
+        this.inputStream = inputStream;
+
     }
 
     public ClassNode getMetadata(){

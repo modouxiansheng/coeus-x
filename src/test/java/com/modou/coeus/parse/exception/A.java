@@ -1,5 +1,8 @@
 package com.modou.coeus.parse.exception;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @program: coeus-x
  * @description:
@@ -14,7 +17,7 @@ public class A {
         ErrorInfo errorInfo = new ErrorInfo();
         errorInfo.setMsg("xxx");
         test(errorInfo);
-
+        test3();
         throw new CodeException(CodeExceptionEnum.OPERATE_FAILED);
     }
 
@@ -26,6 +29,13 @@ public class A {
     public void test2(){
 
         throw new CodeException(2,"测试",CodeExceptionEnum.OPERATE_FAILED);
+    }
+
+    public void test3(){
+        List<CodeException> list = new ArrayList<>();
+        if (list != null && !list.isEmpty()){
+            list.get(0).setMsg("xxx");
+        }
     }
 
 

@@ -21,6 +21,8 @@ public class CoeusParamNode {
 
     public String desc;
 
+    public int access;
+
     private List<CoeusAnnotationNode> annotationNodes;
 
     public CoeusParamNode(String name,String desc) {

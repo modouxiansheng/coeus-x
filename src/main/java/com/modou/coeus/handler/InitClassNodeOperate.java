@@ -19,6 +19,8 @@ import java.util.List;
 public class InitClassNodeOperate implements ClassNodeOperate{
     private static final NodeHandlerFactory nodeHandlerFactory = NodeHandlerFactory.getInstance();
 
+
+
     public void operate(CoeusClassNode classNode) {
 
         ClassNode cn = classNode.getMetadata();

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import static jdk.internal.org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
+
 /**
  * @program: com.zhhiyp.incubator.asm
  * @description: 解析class类
@@ -31,14 +33,14 @@ public class ParseClass {
         ClassNode cn = new ClassNode();
         try {
             ClassReader cr = new ClassReader(in);
-            cr.accept(cn, 0);
+            cr.accept(cn, ClassReader.EXPAND_FRAMES);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         String className = cn.name;
 
-        classRouter.putClass(className,cn);
+        classRouter.putClass(className,cn,in);
 
         classRouter.getClass(className).visit(new InitClassNodeOperate());
     }

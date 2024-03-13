@@ -40,7 +40,7 @@ public class ScanCallChainAbility extends Ability {
      * @Date: 2023/3/5
      */
     private void parseInvoke(CoeusMethodNode start){
-        if (start == null || start.invokeInfos == null){
+        if (start == null){
             return;
         }
         Stack<CoeusMethodNode> stack = new Stack<>();
@@ -50,21 +50,30 @@ public class ScanCallChainAbility extends Ability {
         while (!stack.isEmpty()){
             //先把自己弹出来
             CoeusMethodNode curr = stack.pop();
+            if (curr.invokeInfos == null || curr.invokeInfos.isEmpty()){
+                ScanCallHandlerData scanCallHandlerData = new ScanCallHandlerData(null, classRouter, stack, curr);
+                scanCallHandlerData.setBegin(start);
+                // 执行真正的业务逻辑,可扩展
+                scanCallHandlerInterface.invoke(scanCallHandlerData);
 
-            for (String invokeInfo : curr.invokeInfos) {
-                CoeusMethodNode next = getNext(invokeInfo);
-                if (next != null){
-                    ScanCallHandlerData scanCallHandlerData = new ScanCallHandlerData(next, classRouter, stack, curr);
-                    scanCallHandlerData.setBegin(start);
-                    // 执行真正的业务逻辑,可扩展
-                    scanCallHandlerInterface.invoke(scanCallHandlerData);
+            }else {
+                for (String invokeInfo : curr.invokeInfos) {
+                    CoeusMethodNode next = getNext(invokeInfo);
+                    if (next != null){
+                        ScanCallHandlerData scanCallHandlerData = new ScanCallHandlerData(next, classRouter, stack, curr);
+                        scanCallHandlerData.setBegin(start);
+                        // 执行真正的业务逻辑,可扩展
+                        scanCallHandlerInterface.invoke(scanCallHandlerData);
 
-                    if (!visited.contains(next.getOwnerClass()+next.getId())){
-                        stack.push(next);
-                        visited.add(next.getOwnerClass()+next.getId());
+                        if (!visited.contains(next.getOwnerClass()+next.getId())){
+                            stack.push(next);
+                            visited.add(next.getOwnerClass()+next.getId());
+                        }
                     }
                 }
             }
+
+
         }
     }
 
